@@ -1,0 +1,22 @@
+{
+  "extends": ["airbnb", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error", { "singleQuote": true }],
+    "no-console": "off",
+    "no-unused-vars": "warn",
+    "func-names": "off",
+    "no-process-exit": "off",
+    "object-shorthand": "off",
+    "class-methods-use-this": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-unescaped-entities": "off",
+    "react/jsx-wrap-multilines": "off",
+    "no-debugger": "warn"
+  },
+  "env": {
+    "browser": true
+  }
+}
