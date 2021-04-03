@@ -6,5 +6,5 @@ export const dateDisplayFormat = (
   format = config.DATE_DISPLAY_FORMAT
 ) => {
   if (!date) return 'N/A';
-  return moment(date).format(format);
+  return moment(date * 1000).format(format);
 };

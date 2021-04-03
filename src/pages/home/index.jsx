@@ -11,8 +11,8 @@ const DEMO_DATA = [
     description:
       'Glass on the side of the road northbound direction on Beach Park just before Foster City Blvd intersection. Makes it so bikers are forced to ride out in traffic or risk puncturing their tires. ',
     address: 'Beach Park Blvd & Foster City Blvd Foster City, CA, 94404, USA',
-    occurred_at: 1617138908,
-    updated_at: 1617142487,
+    occurred_at: 1616914800,
+    updated_at: 1617008422,
     url: 'https://bikewise.org/api/v1/incidents/137770',
     source: {
       name: 'SeeClickFix.com',
