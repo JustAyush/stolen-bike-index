@@ -4,7 +4,9 @@ import { AppBar, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const APP_BAR_MIN_HEIGHT = '4.5rem';
-const BODY_PADDING_TOP = '5.5rem';
+const BODY_PADDING_TOP_DESKTOP = '6.5rem';
+const BODY_PADDING_TOP_IPAD = '12rem';
+const BODY_PADDING_TOP_MOBILE = '21.5rem';
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -16,7 +18,13 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[0]
   },
   body: {
-    paddingTop: BODY_PADDING_TOP
+    paddingTop: BODY_PADDING_TOP_MOBILE,
+    [theme.breakpoints.up('lg')]: {
+      paddingTop: BODY_PADDING_TOP_IPAD
+    },
+    [theme.breakpoints.up('xl')]: {
+      paddingTop: BODY_PADDING_TOP_DESKTOP
+    }
   }
 }));
 

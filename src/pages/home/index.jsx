@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Card } from '../../components';
+import Form from './Form';
 
 import { PageLayout } from '../../layouts';
 
@@ -46,7 +47,7 @@ const Home = () => {
 
   return (
     <div>
-      <PageLayout header={<p>Hello World</p>}>{renderedResults}</PageLayout>
+      <PageLayout header={<Form />}>{renderedResults}</PageLayout>
     </div>
   );
 };
