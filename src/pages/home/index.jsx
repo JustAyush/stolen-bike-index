@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Alert } from '@material-ui/lab';
 
-import { Card } from '../../components';
+import { Card, InfoWithFigure } from '../../components';
 import { PageLayout } from '../../layouts';
 import Form from './Form';
+import SearchImg from '../../assets/images/png/search.png';
+import NoResultImg from '../../assets/images/png/no-result.png';
 
 import { fetchIncidents } from '../../services/httpService';
 
@@ -56,7 +58,6 @@ const Home = () => {
       fetchIncidents({
         page: 1,
         proximity_square: 10,
-        query: 'accordion',
         incident_type: 'theft'
       })
         .then((res) => resolve(res))
@@ -146,12 +147,22 @@ const Home = () => {
           </Alert>
         )}
         {isLoading && 'Loading...'}
-        {!isLoading && !isSubmitted && 'Please search above to get results'}
+        {!isLoading && !isSubmitted && (
+          <InfoWithFigure
+            imageUrl={SearchImg}
+            text="Please search with any or all of the queries above to get bike theft
+             incidents."
+          />
+        )}
         {!isLoading &&
           isSubmitted &&
           bikeTheftIncidents &&
-          bikeTheftIncidents.length < 1 &&
-          'No incident found.'}
+          bikeTheftIncidents.length < 1 && (
+            <InfoWithFigure
+              imageUrl={NoResultImg}
+              text="We couldn't find any incidents with given queries."
+            />
+          )}
         {renderedResults}
       </PageLayout>
     </div>
