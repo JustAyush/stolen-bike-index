@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress } from '@material-ui/core';
+import { Box, CircularProgress, Typography, Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 import { Card, InfoWithFigure } from '../../components';
@@ -43,13 +43,15 @@ const Home = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   // Bike Theft Incidents
   const [bikeTheftIncidents, setBikeTheftIncidents] = useState([]);
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
 
   const checkIfAddressTypeBtNotPicked = () => {
     if (location.address && !(location.lat || location.lng)) return true;
     return false;
   };
 
-  const validateInputs = () => {
+  const checkIfInputNotFilled = () => {
     if (
       !(
         location.lat ||
@@ -64,20 +66,9 @@ const Home = () => {
     return false;
   };
 
-  const fetchBikeTheftIncidents = (queryObj) => {
-    return new Promise((resolve, reject) => {
-      fetchIncidents({
-        ...queryObj,
-        ...defaultQueryParams
-      })
-        .then((res) => resolve(res))
-        .catch((err) => reject(err));
-    });
-  };
-
-  const getQueryParams = () => {
+  const getQueryParams = (page) => {
     return {
-      page: 1,
+      page,
       occurred_before: occurredBefore
         ? convertTo10DigitTimestamp(occurredBefore)
         : undefined,
@@ -92,7 +83,19 @@ const Home = () => {
     };
   };
 
-  const handleFormSubmit = () => {
+  const fetchBikeTheftIncidents = (queryObj) => {
+    return new Promise((resolve, reject) => {
+      fetchIncidents({
+        ...queryObj,
+        ...defaultQueryParams
+      })
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
+    });
+  };
+
+  const checkInputValidation = () => {
+    let isValidated = true;
     const isAddressTypeBtNotPicked = checkIfAddressTypeBtNotPicked();
     if (isAddressTypeBtNotPicked) {
       setError({
@@ -102,9 +105,9 @@ const Home = () => {
         address: true,
         server: false
       });
-      return;
+      isValidated = false;
     }
-    const isInputNotFilled = validateInputs();
+    const isInputNotFilled = checkIfInputNotFilled();
     if (isInputNotFilled) {
       setError({
         warning: false,
@@ -112,12 +115,19 @@ const Home = () => {
         address: false,
         server: false
       });
-      return;
+      isValidated = false;
     }
+    return isValidated;
+  };
+
+  const handleFormSubmit = (page = 1) => {
+    setCurrentPage(page);
+    const isInputValidated = checkInputValidation();
+    if (!isInputValidated) return;
     setError({ warning: false, text: '', address: false, server: false });
     setIsLoading(true);
     setIsSubmitted(true);
-    const queryParams = getQueryParams();
+    const queryParams = getQueryParams(page);
     fetchBikeTheftIncidents(queryParams)
       .finally(() => setIsLoading(false))
       .then((response) => {
@@ -131,6 +141,20 @@ const Home = () => {
           server: true
         });
       });
+  };
+
+  const handlePrevClick = () => {
+    const isInputValidated = checkInputValidation();
+    if (!isInputValidated) return;
+    const prevPage = currentPage - 1;
+    handleFormSubmit(prevPage);
+  };
+
+  const handleNextClick = () => {
+    const isInputValidated = checkInputValidation();
+    if (!isInputValidated) return;
+    const nextPage = currentPage + 1;
+    handleFormSubmit(nextPage);
   };
 
   const renderedInitialSearchInfo = !isLoading && !isSubmitted && (
@@ -178,6 +202,32 @@ const Home = () => {
       />
     ));
 
+  const renderedPagination = !isLoading &&
+    isSubmitted &&
+    bikeTheftIncidents &&
+    bikeTheftIncidents.length > 0 && (
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={1}>
+        <Typography variant="subtitle1" color="initial">
+          Page&nbsp;
+          {currentPage}
+        </Typography>
+        <Box>
+          <Button
+            disabled={currentPage === 1 || isLoading}
+            onClick={handlePrevClick}>
+            Prev
+          </Button>
+          <Button onClick={handleNextClick} disabled={isLoading}>
+            Next
+          </Button>
+        </Box>
+      </Box>
+    );
+
   return (
     <div>
       <PageLayout
@@ -197,11 +247,15 @@ const Home = () => {
             handleFormSubmit={handleFormSubmit}
           />
         }>
+        {renderedPagination}
         {renderedAlertMsg}
         {renderedLoader}
         {renderedInitialSearchInfo}
         {renderedResultNotFoundMsg}
         {renderedResults}
+        {bikeTheftIncidents &&
+          bikeTheftIncidents.length > 5 &&
+          renderedPagination}
       </PageLayout>
     </div>
   );
