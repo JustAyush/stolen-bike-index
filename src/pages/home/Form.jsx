@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -37,6 +37,8 @@ const Form = (props) => {
   const theme = useTheme();
   const isSmallerThanLg = useMediaQuery('(max-width:992px)');
 
+  const placeAutocompleteRef = useRef();
+
   const {
     location,
     setLocation,
@@ -45,7 +47,11 @@ const Form = (props) => {
     occurredBefore,
     setOccurredBefore,
     occurredAfter,
-    setOccurredAfter
+    setOccurredAfter,
+    error,
+    setError,
+    isLoading,
+    handleFormSubmit
   } = props;
 
   const handleSelectLocation = async (value) => {
@@ -56,12 +62,14 @@ const Form = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Form Values');
-    console.log('lat, lng', location.lat, location.lng);
-    console.log('title', title);
-    console.log('occurredBefore', occurredBefore);
-    console.log('occurredAfter', occurredAfter);
+    handleFormSubmit();
   };
+
+  useEffect(() => {
+    if (error.address) {
+      placeAutocompleteRef.current.focus();
+    }
+  }, [error.address]);
 
   return (
     <Container maxWidth="xl">
@@ -77,6 +85,12 @@ const Form = (props) => {
                   lat: null,
                   lng: null,
                   address: data
+                });
+                setError({
+                  warning: false,
+                  text: '',
+                  address: false,
+                  server: false
                 });
               }}
               onSelect={handleSelectLocation}>
@@ -96,6 +110,8 @@ const Form = (props) => {
                       classes: inputBaseStyles,
                       disableUnderline: true
                     }}
+                    inputRef={placeAutocompleteRef}
+                    error={!!error.address}
                   />
                   <div className={placeAutocompleteStyles.suggestion}>
                     {suggestions.map((suggestion) => {
@@ -198,7 +214,8 @@ const Form = (props) => {
           variant="contained"
           color="primary"
           type="submit"
-          className={classes.searchBtn}>
+          className={classes.searchBtn}
+          disabled={isLoading}>
           <FontAwesomeIcon icon={faSearch} size="lg" />
           {isSmallerThanLg && (
             <Typography variant="subtitle1">Search</Typography>
@@ -221,7 +238,16 @@ Form.propTypes = {
   occurredBefore: PropTypes.instanceOf(Date),
   setOccurredBefore: PropTypes.func.isRequired,
   occurredAfter: PropTypes.instanceOf(Date),
-  setOccurredAfter: PropTypes.func.isRequired
+  setOccurredAfter: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    warning: PropTypes.bool.isRequired,
+    text: PropTypes.string.isRequired,
+    address: PropTypes.bool.isRequired,
+    server: PropTypes.bool.isRequired
+  }).isRequired,
+  setError: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  handleFormSubmit: PropTypes.func.isRequired
 };
 
 Form.defaultProps = {

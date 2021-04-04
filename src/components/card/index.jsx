@@ -93,7 +93,7 @@ const Card = (props) => {
   );
 
   return (
-    <Box p={2} className={classes.card}>
+    <Box p={2} className={classes.card} mb={4}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={3}>
           {renderedImage}
@@ -108,12 +108,21 @@ const Card = (props) => {
 };
 
 Card.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  address: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  stolenDate: PropTypes.number.isRequired,
-  reportedDate: PropTypes.number.isRequired
+  imageUrl: PropTypes.string,
+  title: PropTypes.string,
+  address: PropTypes.string,
+  description: PropTypes.string,
+  stolenDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  reportedDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+};
+
+Card.defaultProps = {
+  imageUrl: '',
+  title: '',
+  address: '',
+  description: '',
+  stolenDate: '',
+  reportedDate: ''
 };
 
 export default Card;

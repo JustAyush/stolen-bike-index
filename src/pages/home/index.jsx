@@ -1,36 +1,11 @@
 import React, { useState } from 'react';
+import { Alert } from '@material-ui/lab';
 
 import { Card } from '../../components';
+import { PageLayout } from '../../layouts';
 import Form from './Form';
 
-import { PageLayout } from '../../layouts';
-
-const DEMO_DATA = [
-  {
-    id: 137770,
-    title: 'Streets (Hazard/Debris/Animal in Roadway)',
-    description:
-      'Glass on the side of the road northbound direction on Beach Park just before Foster City Blvd intersection. Makes it so bikers are forced to ride out in traffic or risk puncturing their tires. ',
-    address: 'Beach Park Blvd & Foster City Blvd Foster City, CA, 94404, USA',
-    occurred_at: 1616914800,
-    updated_at: 1617008422,
-    url: 'https://bikewise.org/api/v1/incidents/137770',
-    source: {
-      name: 'SeeClickFix.com',
-      html_url: 'https://seeclickfix.com/issues/9620971',
-      api_url: 'https://seeclickfix.com/api/v2/issues/9620971'
-    },
-    media: {
-      image_url:
-        'https://files.bikeindex.org/uploads/Pu/414010/large_SC_Bike_Photo.jpg',
-      image_url_thumb: null
-    },
-    location_type: null,
-    location_description: null,
-    type: 'Hazard',
-    type_properties: null
-  }
-];
+import { fetchIncidents } from '../../services/httpService';
 
 const Home = () => {
   // form input states
@@ -42,18 +17,107 @@ const Home = () => {
   const [title, setTitle] = useState('');
   const [occurredBefore, setOccurredBefore] = useState(null);
   const [occurredAfter, setOccurredAfter] = useState(null);
+  // error state
+  const [error, setError] = useState({
+    text: '',
+    warning: false,
+    address: false,
+    server: false
+  });
+  // loading state
+  const [isLoading, setIsLoading] = useState(false);
+  // Submitted state
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  // Bike Theft Incidents
+  const [bikeTheftIncidents, setBikeTheftIncidents] = useState([]);
 
-  const renderedResults = DEMO_DATA.map((result) => (
-    <Card
-      key={result.id}
-      imageUrl={result.media && result.media.image_url}
-      title={result.title}
-      address={result.address}
-      description={result.description}
-      stolenDate={result.occurred_at}
-      reportedDate={result.updated_at}
-    />
-  ));
+  const checkIfAddressTypeBtNotPicked = () => {
+    if (location.address && !(location.lat || location.lng)) return true;
+    return false;
+  };
+
+  const validateInputs = () => {
+    if (
+      !(
+        location.lat ||
+        location.lng ||
+        title ||
+        occurredBefore ||
+        occurredAfter
+      )
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const fetchBikeTheftIncidents = () => {
+    return new Promise((resolve, reject) => {
+      fetchIncidents({
+        page: 1,
+        proximity_square: 10,
+        query: 'accordion',
+        incident_type: 'theft'
+      })
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
+    });
+  };
+
+  const handleFormSubmit = () => {
+    const isAddressTypeBtNotPicked = checkIfAddressTypeBtNotPicked();
+    if (isAddressTypeBtNotPicked) {
+      setError({
+        warning: false,
+        text:
+          'Could not pick the exact location. Please pick the location from the suggestion',
+        address: true,
+        server: false
+      });
+      return;
+    }
+    const isInputNotFilled = validateInputs();
+    if (isInputNotFilled) {
+      setError({
+        warning: false,
+        text: 'Please fill any of the inputs for searching results',
+        address: false,
+        server: false
+      });
+      return;
+    }
+    setError({ warning: false, text: '', address: false, server: false });
+    setIsLoading(true);
+    setIsSubmitted(true);
+    fetchBikeTheftIncidents()
+      .finally(() => setIsLoading(false))
+      .then((response) => {
+        setBikeTheftIncidents(response.incidents);
+      })
+      .catch((err) => {
+        setError({
+          warning: false,
+          text: `We are having trouble fetching incidents : ${err.response.data.error}`,
+          address: false,
+          server: true
+        });
+      });
+  };
+
+  const renderedResults =
+    !isLoading &&
+    bikeTheftIncidents &&
+    bikeTheftIncidents.map((result) => (
+      <Card
+        key={result.id}
+        imageUrl={result.media && result.media.image_url}
+        title={result.title}
+        address={result.address}
+        description={result.description}
+        stolenDate={result.occurred_at}
+        reportedDate={result.updated_at}
+      />
+    ));
 
   return (
     <div>
@@ -68,8 +132,26 @@ const Home = () => {
             setOccurredBefore={setOccurredBefore}
             occurredAfter={occurredAfter}
             setOccurredAfter={setOccurredAfter}
+            error={error}
+            setError={setError}
+            isLoading={isLoading}
+            handleFormSubmit={handleFormSubmit}
           />
         }>
+        {!isLoading && Boolean(error.text) && (
+          <Alert
+            severity={error.warning ? 'warning' : 'error'}
+            className="mb-4">
+            {error.text}
+          </Alert>
+        )}
+        {isLoading && 'Loading...'}
+        {!isLoading && !isSubmitted && 'Please search above to get results'}
+        {!isLoading &&
+          isSubmitted &&
+          bikeTheftIncidents &&
+          bikeTheftIncidents.length < 1 &&
+          'No incident found.'}
         {renderedResults}
       </PageLayout>
     </div>
