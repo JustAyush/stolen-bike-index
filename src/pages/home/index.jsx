@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Card } from '../../components';
 import Form from './Form';
@@ -33,6 +33,16 @@ const DEMO_DATA = [
 ];
 
 const Home = () => {
+  // form input states
+  const [location, setLocation] = useState({
+    address: '',
+    lat: '',
+    lng: ''
+  });
+  const [title, setTitle] = useState('');
+  const [occurredBefore, setOccurredBefore] = useState(null);
+  const [occurredAfter, setOccurredAfter] = useState(null);
+
   const renderedResults = DEMO_DATA.map((result) => (
     <Card
       key={result.id}
@@ -47,7 +57,21 @@ const Home = () => {
 
   return (
     <div>
-      <PageLayout header={<Form />}>{renderedResults}</PageLayout>
+      <PageLayout
+        header={
+          <Form
+            location={location}
+            setLocation={setLocation}
+            title={title}
+            setTitle={setTitle}
+            occurredBefore={occurredBefore}
+            setOccurredBefore={setOccurredBefore}
+            occurredAfter={occurredAfter}
+            setOccurredAfter={setOccurredAfter}
+          />
+        }>
+        {renderedResults}
+      </PageLayout>
     </div>
   );
 };

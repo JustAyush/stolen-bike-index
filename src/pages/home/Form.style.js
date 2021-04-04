@@ -47,6 +47,29 @@ const shadeInputLabelStyles = ({ palette }) => ({
   }
 });
 
+const placeAutocompleteStyles = {
+  cover: {
+    position: 'relative',
+    zIndex: 20,
+    marginTop: '16px'
+  },
+  suggestion: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    zIndex: 20,
+    borderRadius: '6px',
+    boxShadow: '0px 3px 15px rgba(0,0,0,0.12)',
+    width: '100%'
+  },
+  places: {
+    backgroundColor: 'white',
+    zIndex: 20,
+    fontSize: '16px',
+    padding: '8px 5px',
+    cursor: 'pointer'
+  }
+};
+
 export const useStyles = makeStyles((theme) => ({
   searchBtn: {
     color: theme.palette.background.white,
@@ -86,4 +109,8 @@ export const useshadeInputBaseStyles = makeStyles(shadeInputBaseStyles, {
 
 export const useshadeInputLabelStyles = makeStyles(shadeInputLabelStyles, {
   name: 'ShadeTextField'
+});
+
+export const usePlaceAutocompleteStyles = makeStyles(placeAutocompleteStyles, {
+  name: 'PlaceAutocomplete'
 });
