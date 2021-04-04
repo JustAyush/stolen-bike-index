@@ -37,7 +37,11 @@ const Card = (props) => {
 
   const renderedHeading = (
     <>
-      <Typography variant="h6" color="primary" className="font-bold">
+      <Typography
+        variant="h6"
+        color="primary"
+        className="font-bold"
+        data-testid="title">
         {title}
       </Typography>
       {Boolean(address) && (
@@ -47,7 +51,10 @@ const Card = (props) => {
             size="sm"
             className="text-muted inline-block mr-2"
           />
-          <Typography variant="subtitle2" className="text-muted">
+          <Typography
+            variant="subtitle2"
+            className="text-muted"
+            data-testid="address">
             {address}
           </Typography>
         </Box>
@@ -57,20 +64,28 @@ const Card = (props) => {
 
   const renderedBody = (
     <Box mt={1.5}>
-      <Typography variant="subtitle1" color="primary">
+      <Typography variant="subtitle1" color="primary" data-testid="description">
         {description}
       </Typography>
       <Box mt={1}>
         <Typography variant="subtitle1" className="text-muted inline mr-2">
           Stolen:
         </Typography>
-        <Typography variant="subtitle1" className="inline" color="secondary">
+        <Typography
+          variant="subtitle1"
+          className="inline"
+          color="secondary"
+          data-testid="stolen-date">
           {stolenDate ? dateDisplayFormat(stolenDate) : 'N/A'}
         </Typography>
         <Typography variant="subtitle1" className="text-muted inline ml-4 mr-2">
           Reported:
         </Typography>
-        <Typography variant="subtitle1" className="inline" color="secondary">
+        <Typography
+          variant="subtitle1"
+          className="inline"
+          color="secondary"
+          data-testid="reported-date">
           {reportedDate ? dateDisplayFormat(reportedDate) : 'N/A'}
         </Typography>
       </Box>
@@ -78,7 +93,7 @@ const Card = (props) => {
   );
 
   return (
-    <Box p={2} className={classes.card}>
+    <Box p={2} className={classes.card} mb={3}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={3}>
           {renderedImage}
@@ -93,12 +108,21 @@ const Card = (props) => {
 };
 
 Card.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  address: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  stolenDate: PropTypes.number.isRequired,
-  reportedDate: PropTypes.number.isRequired
+  imageUrl: PropTypes.string,
+  title: PropTypes.string,
+  address: PropTypes.string,
+  description: PropTypes.string,
+  stolenDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  reportedDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+};
+
+Card.defaultProps = {
+  imageUrl: '',
+  title: '',
+  address: '',
+  description: '',
+  stolenDate: '',
+  reportedDate: ''
 };
 
 export default Card;

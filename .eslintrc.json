@@ -18,6 +18,7 @@
     "react/forbid-prop-types": "off",
     "react/no-unescaped-entities": "off",
     "react/jsx-wrap-multilines": "off",
+    "react/jsx-closing-bracket-location": "off",
     "no-unneeded-ternary": "off",
     "no-debugger": "warn"
   },

@@ -33,6 +33,9 @@ const styles = (theme) => ({
     },
     '.ml-4': {
       marginLeft: '1rem'
+    },
+    '.mb-4': {
+      marginBottom: '1rem'
     }
   }
 });
