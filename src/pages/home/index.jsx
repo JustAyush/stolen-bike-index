@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Box, CircularProgress } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 import { Card, InfoWithFigure } from '../../components';
@@ -8,6 +9,16 @@ import SearchImg from '../../assets/images/png/search.png';
 import NoResultImg from '../../assets/images/png/no-result.png';
 
 import { fetchIncidents } from '../../services/httpService';
+
+import { convertTo10DigitTimestamp } from '../../utils/momentUtils';
+
+import { QUERY_CONSTANTS } from '../../constants';
+
+const defaultQueryParams = {
+  per_page: QUERY_CONSTANTS.PER_PAGE,
+  proximity_square: QUERY_CONSTANTS.PROXIMITY_SQUARE,
+  incident_type: QUERY_CONSTANTS.INCIDENT_TYPE
+};
 
 const Home = () => {
   // form input states
@@ -53,16 +64,32 @@ const Home = () => {
     return false;
   };
 
-  const fetchBikeTheftIncidents = () => {
+  const fetchBikeTheftIncidents = (queryObj) => {
     return new Promise((resolve, reject) => {
       fetchIncidents({
-        page: 1,
-        proximity_square: 10,
-        incident_type: 'theft'
+        ...queryObj,
+        ...defaultQueryParams
       })
         .then((res) => resolve(res))
         .catch((err) => reject(err));
     });
+  };
+
+  const getQueryParams = () => {
+    return {
+      page: 1,
+      occurred_before: occurredBefore
+        ? convertTo10DigitTimestamp(occurredBefore)
+        : undefined,
+      occurred_after: occurredAfter
+        ? convertTo10DigitTimestamp(occurredAfter)
+        : undefined,
+      proximity:
+        location.lat && location.lng
+          ? `${location.lat},${location.lng}`
+          : undefined,
+      query: title ? title.trim() : undefined
+    };
   };
 
   const handleFormSubmit = () => {
@@ -90,7 +117,8 @@ const Home = () => {
     setError({ warning: false, text: '', address: false, server: false });
     setIsLoading(true);
     setIsSubmitted(true);
-    fetchBikeTheftIncidents()
+    const queryParams = getQueryParams();
+    fetchBikeTheftIncidents(queryParams)
       .finally(() => setIsLoading(false))
       .then((response) => {
         setBikeTheftIncidents(response.incidents);
@@ -104,6 +132,36 @@ const Home = () => {
         });
       });
   };
+
+  const renderedInitialSearchInfo = !isLoading && !isSubmitted && (
+    <InfoWithFigure
+      imageUrl={SearchImg}
+      text="Please search with any or all of the queries above to get bike theft
+       incidents."
+    />
+  );
+
+  const renderedResultNotFoundMsg = !isLoading &&
+    isSubmitted &&
+    bikeTheftIncidents &&
+    bikeTheftIncidents.length < 1 && (
+      <InfoWithFigure
+        imageUrl={NoResultImg}
+        text="We couldn't find any incidents with given queries."
+      />
+    );
+
+  const renderedAlertMsg = !isLoading && Boolean(error.text) && (
+    <Alert severity={error.warning ? 'warning' : 'error'} className="mb-4">
+      {error.text}
+    </Alert>
+  );
+
+  const renderedLoader = isLoading && (
+    <Box display="flex" justifyContent="center" mt={12}>
+      <CircularProgress color="secondary" />
+    </Box>
+  );
 
   const renderedResults =
     !isLoading &&
@@ -139,30 +197,10 @@ const Home = () => {
             handleFormSubmit={handleFormSubmit}
           />
         }>
-        {!isLoading && Boolean(error.text) && (
-          <Alert
-            severity={error.warning ? 'warning' : 'error'}
-            className="mb-4">
-            {error.text}
-          </Alert>
-        )}
-        {isLoading && 'Loading...'}
-        {!isLoading && !isSubmitted && (
-          <InfoWithFigure
-            imageUrl={SearchImg}
-            text="Please search with any or all of the queries above to get bike theft
-             incidents."
-          />
-        )}
-        {!isLoading &&
-          isSubmitted &&
-          bikeTheftIncidents &&
-          bikeTheftIncidents.length < 1 && (
-            <InfoWithFigure
-              imageUrl={NoResultImg}
-              text="We couldn't find any incidents with given queries."
-            />
-          )}
+        {renderedAlertMsg}
+        {renderedLoader}
+        {renderedInitialSearchInfo}
+        {renderedResultNotFoundMsg}
         {renderedResults}
       </PageLayout>
     </div>

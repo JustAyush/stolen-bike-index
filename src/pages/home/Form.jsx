@@ -155,32 +155,6 @@ const Form = (props) => {
           <Grid item xs={12} lg={5}>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                {/* Search by occured before start */}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    variant="inline"
-                    value={occurredBefore}
-                    placeholder="Occurred before"
-                    onChange={(date) => setOccurredBefore(date)}
-                    format={config.DATE_PICKER_MASKED_INPUT_FORMAT}
-                    InputLabelProps={{
-                      shrink: true,
-                      classes: inputLabelStyles
-                    }}
-                    InputProps={{
-                      classes: inputBaseStyles,
-                      disableUnderline: true
-                    }}
-                    className={classes.formControlMarginTop}
-                    invalidDateMessage=""
-                    disableToolbar
-                    autoOk
-                    fullWidth
-                  />
-                </MuiPickersUtilsProvider>
-                {/* Search by occured before end */}
-              </Grid>
-              <Grid item xs={6}>
                 {/* Search by occured after start */}
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
@@ -189,7 +163,7 @@ const Form = (props) => {
                     placeholder="Occurred after"
                     onChange={(date) => setOccurredAfter(date)}
                     format={config.DATE_PICKER_MASKED_INPUT_FORMAT}
-                    minDate={occurredBefore ? occurredBefore : null}
+                    disableFuture
                     InputLabelProps={{
                       shrink: true,
                       classes: inputLabelStyles
@@ -206,6 +180,34 @@ const Form = (props) => {
                   />
                 </MuiPickersUtilsProvider>
                 {/* Search by occured after end */}
+              </Grid>
+              <Grid item xs={6}>
+                {/* Search by occured before start */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    variant="inline"
+                    value={occurredBefore}
+                    placeholder="Occurred before"
+                    onChange={(date) => setOccurredBefore(date)}
+                    format={config.DATE_PICKER_MASKED_INPUT_FORMAT}
+                    minDate={occurredAfter ? occurredAfter : null}
+                    disableFuture
+                    InputLabelProps={{
+                      shrink: true,
+                      classes: inputLabelStyles
+                    }}
+                    InputProps={{
+                      classes: inputBaseStyles,
+                      disableUnderline: true
+                    }}
+                    className={classes.formControlMarginTop}
+                    invalidDateMessage=""
+                    disableToolbar
+                    autoOk
+                    fullWidth
+                  />
+                </MuiPickersUtilsProvider>
+                {/* Search by occured before end */}
               </Grid>
             </Grid>
           </Grid>

@@ -93,7 +93,7 @@ const Card = (props) => {
   );
 
   return (
-    <Box p={2} className={classes.card} mb={4}>
+    <Box p={2} className={classes.card} mb={3}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={3}>
           {renderedImage}
