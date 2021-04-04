@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AppBar, Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const APP_BAR_MIN_HEIGHT = '4.5rem';
 const BODY_PADDING_TOP_DESKTOP = '6.5rem';
-const BODY_PADDING_TOP_IPAD = '12rem';
-const BODY_PADDING_TOP_MOBILE = '21.5rem';
+const BODY_PADDING_TOP_IPAD = '20rem';
+const BODY_PADDING_TOP_IPAD_PRO = '12rem';
+const BODY_PADDING_TOP_MOBILE = '2rem';
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -19,8 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
   body: {
     paddingTop: BODY_PADDING_TOP_MOBILE,
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       paddingTop: BODY_PADDING_TOP_IPAD
+    },
+    [theme.breakpoints.up('lg')]: {
+      paddingTop: BODY_PADDING_TOP_IPAD_PRO
     },
     [theme.breakpoints.up('xl')]: {
       paddingTop: BODY_PADDING_TOP_DESKTOP
@@ -30,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
 
 const PageLayout = ({ header, children }) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <div className={classes.background}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar
+        position={isMobile ? 'relative' : 'fixed'}
+        className={classes.appBar}>
         {header}
       </AppBar>
       <div className={classes.body}>
