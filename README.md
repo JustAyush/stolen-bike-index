@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# Stolen Bike Index
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Stolen bike index is a web app where you can search stolen/missing bikes.
 
-## Available Scripts
+![Preview Image](src/assets/images/png/preview.png)
 
-In the project directory, you can run:
+## How to run the project locally
 
-### `npm start`
+To clone and run this application, you'll need [Git](https://git-scm.com/) and [node.js](https://nodejs.org/en/) (which comes with [npm](https://www.npmjs.com/)) installed on your computer. From your command line.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    // Clone the repository  
+    $ git clone https://github.com/JustAyush/stolen-bike-index
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    // Go into the repository  
+    $ cd stolen-bike-index
 
-### `npm test`
+    // Install dependencies
+    $ npm install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    // Run the app
+    $ npm start
 
-### `npm run build`
+Note: Google Maps API key is required for searching locations. Create a new file 
+in the root directory and name it .env and place your API key (see .env.sample).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). 
+The major project structure is highlighted below.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    stolen-bike-index/
+      node_modules/
+      public/
+      src/
+        assets/              // contains images, theme, global styles 
+        components/          // presentational components
+          card/
+            index.jsx        // card component
+            Card.style.js    // styles for the card component
+            Card.test.js     // test suites for the card component
+          ...
+          index.js           // exports all components 
+        constants/           // constants for the entire project scope 
+          index.js           
+        layouts/
+          PageLayout.jsx     // Main Layout of the app
+          index.js           // exports all layouts
+        pages/               // components that render the pages
+          home/
+          index.js           // exports all pages
+        services/
+          httpService.js     // service for the axios call
+        utils/               // helper functions
+      App.jsx
+      config.js              // configurations for the entire project scope
+      .env
+      .eslintrc.json         // ESLint plugins and rules
+      .prettierrc            // Prettier configurations
+      package.json
+      README.md
 
-### `npm run eject`
+## File and folder naming conventions
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+React Components -> Pascal Case ending with .jsx (PageLayout.jsx or index.js)  
+Styles -> Pascal Case ending with .style.js (PageLayout.style.js)  
+Test Suites -> Pascal Case ending with .test.js (PageLayout.test.js)  
+Folder -> hyphen case (page-layout)  
+Other JavaScript Files -> camelCase (httpService.js)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Limitations
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+[API](https://www.bikewise.org/documentation/api_v2) used to fetch the incidents doesn't contain total incident count in its response.
+  For the same reason, the total incidents and the total pages have not been mentioned in the search result.
+  The user may get 'No Result Found' as he/she is going through next pages because the availability or inavailability of
+  the incidents is not known beforehand.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
