@@ -221,7 +221,11 @@ const Home = () => {
             onClick={handlePrevClick}>
             Prev
           </Button>
-          <Button onClick={handleNextClick} disabled={isLoading}>
+          <Button
+            onClick={handleNextClick}
+            disabled={
+              isLoading || bikeTheftIncidents.length < QUERY_CONSTANTS.PER_PAGE
+            }>
             Next
           </Button>
         </Box>
