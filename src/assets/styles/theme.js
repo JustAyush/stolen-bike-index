@@ -7,6 +7,8 @@ const text = '#00234B';
 const lightText = '#878791';
 const background = '#EBECED';
 const whiteBackground = '#FFF';
+export const textInputError = '#ff6b81';
+export const textInputErrorBackground = '#fff0f0';
 
 // breakpoints
 const xs = 0;

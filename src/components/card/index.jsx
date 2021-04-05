@@ -68,22 +68,26 @@ const Card = (props) => {
         {description}
       </Typography>
       <Box mt={1}>
-        <Typography variant="subtitle1" className="text-muted inline mr-2">
+        <Typography
+          variant="subtitle1"
+          className="text-muted inline-block mr-2">
           Stolen:
         </Typography>
         <Typography
           variant="subtitle1"
-          className="inline"
+          className="inline-block"
           color="secondary"
           data-testid="stolen-date">
           {stolenDate ? dateDisplayFormat(stolenDate) : 'N/A'}
         </Typography>
-        <Typography variant="subtitle1" className="text-muted inline ml-4 mr-2">
+        <Typography
+          variant="subtitle1"
+          className="text-muted inline-block ml-4 mr-2">
           Reported:
         </Typography>
         <Typography
           variant="subtitle1"
-          className="inline"
+          className="inline-block"
           color="secondary"
           data-testid="reported-date">
           {reportedDate ? dateDisplayFormat(reportedDate) : 'N/A'}

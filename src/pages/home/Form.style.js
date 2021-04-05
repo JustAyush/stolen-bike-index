@@ -1,8 +1,13 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+import {
+  textInputError,
+  textInputErrorBackground
+} from '../../assets/styles/theme';
+
 const shadeInputBaseStyles = (theme) => {
   const color = theme.palette.secondary.main;
-  const error = '#ff6b81';
+  const error = textInputError;
   return {
     root: {
       backgroundColor: theme.palette.grey[200],
@@ -13,7 +18,7 @@ const shadeInputBaseStyles = (theme) => {
       boxShadow: `0 0 0 2px ${color}`
     },
     error: {
-      backgroundColor: '#fff0f0',
+      backgroundColor: textInputErrorBackground,
       '&$focused': {
         boxShadow: `0 0 0 2px ${error}`
       }
