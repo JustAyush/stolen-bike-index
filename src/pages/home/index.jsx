@@ -46,6 +46,7 @@ const Home = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
 
+  // The user needs to pick the address from the suggestion
   const checkIfAddressTypeBtNotPicked = () => {
     if (location.address && !(location.lat || location.lng)) return true;
     return false;
